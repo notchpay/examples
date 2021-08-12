@@ -33,16 +33,6 @@ This project implements basic shopping cart features:
 * [Bootstrap 4](https://getbootstrap.com/)
 * Firebase (auth and realtime database)
 
-## Demo
-
-Checkout demo at [Demo](http://vuejs-shopping-cart.coddeine.com/)
-
-![Alt text](/screenshots/screenshot1.png?raw=true "Optional Title")
-
-
-## Support
-<a href="https://www.buymeacoffee.com/8buMYCOog" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;"></a>
-
 ## Contributing
 
 As I use this for my own projects, I know this might not be the perfect approach
