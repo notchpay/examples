@@ -23,7 +23,6 @@ You can use data in `data/` folder to import to `products` node in your firebase
 ## Features
 
 This project implements basic shopping cart features:
-* Login / Register
 * Pull products list from API
 * Add/Remove item to shopping cart
 
@@ -32,6 +31,7 @@ This project implements basic shopping cart features:
 * VueJS [^2.2.1]
 * [Bootstrap 4](https://getbootstrap.com/)
 * Firebase (auth and realtime database)
+* Notch Pay for payment
 
 ## Contributing
 
