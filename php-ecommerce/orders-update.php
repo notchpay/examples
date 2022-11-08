@@ -1,21 +1,23 @@
 <?php
 
 
-if(session_id() == '' || !isset($_SESSION)){session_start();}
+if (session_id() == '' || !isset($_SESSION)) {
+  session_start();
+}
 
 include 'config.php';
 
-if(isset($_SESSION['cart'])) {
+if (isset($_SESSION['cart'])) {
 
   $total = 0;
 
-  foreach($_SESSION['cart'] as $product_id => $quantity) {
+  foreach ($_SESSION['cart'] as $product_id => $quantity) {
 
-    $result = $mysqli->query("SELECT * FROM products WHERE id = ".$product_id);
+    $result = $mysqli->query("SELECT * FROM products WHERE id = " . $product_id);
 
-    if($result){
+    if ($result) {
 
-      if($obj = $result->fetch_object()) {
+      if ($obj = $result->fetch_object()) {
 
 
         $cost = $obj->price * $quantity;
@@ -24,10 +26,9 @@ if(isset($_SESSION['cart'])) {
 
         $query = $mysqli->query("INSERT INTO orders (product_code, product_name, product_desc, price, units, total, email) VALUES('$obj->product_code', '$obj->product_name', '$obj->product_desc', $obj->price, $quantity, $cost, '$user')");
 
-        if($query){
+        if ($query) {
           $newqty = $obj->qty - $quantity;
-          if($mysqli->query("UPDATE products SET qty = ".$newqty." WHERE id = ".$product_id)){
-
+          if ($mysqli->query("UPDATE products SET qty = " . $newqty . " WHERE id = " . $product_id)) {
           }
         }
       }
@@ -35,50 +36,41 @@ if(isset($_SESSION['cart'])) {
   }
 }
 require("vendor/autoload.php");
-$notchpay = new NotchPay\NotchPay("sb.g2VM92VUtTUnsbf8gSwrkcMfV4GTNF2k", false);
+$notchpay = new NotchPay\NotchPay("sb.d9RUnRndHuVM6JaD2VjUnFwVRk82vUVv", false);
 
 
-if(isset($_GET['trxref'])) {
-    try
-    {
-        // verify using the library
-        $tranx = $notchpay->transaction->verify([
-                'reference'=>$_GET['trxref'], // unique to transactions
-        ]);
+if (isset($_GET['trxref'])) {
+  try {
+    // verify using the library
+    $tranx = $notchpay->payment->verify([
+      'reference' => $_GET['trxref'], // unique to transactions
+    ]);
 
-        echo "<pre>";
-        var_dump($tranx);
-        echo "</pre>";
+    echo "<pre>";
+    var_dump($tranx);
+    echo "</pre>";
 
-        if ('complete' === $tranx->status) {
-            unset($_SESSION['cart']);
-            header("location:success.php");
-        }
-
-    } catch(\NotchPay\NotchPay\Exception\ApiException $e){
-            print_r($e->getResponseObject());
-            die($e->getMessage());
-        }
-
-
-} else {
-    try
-    {
-        $tranx = $notchpay->transaction->initialize([
-                'amount'=>4000,
-                "currency" => "XAF",
-                "callback" => "http://ecommerce.test/orders-update.php",
-                'email'=>"chapdel.kamga2@gmail.com",         // unique to customers
-        ]);
-
-        header('Location: ' . $tranx->authorization_url);
-    } catch(\NotchPay\NotchPay\Exception\ApiException $e){
-        // print_r($e->getResponseObject());
-        die($e->getMessage());
+    if ('complete' === $tranx->status) {
+      unset($_SESSION['cart']);
+      header("location:success.php");
+    } else {
+      header("location:cart.php");
     }
+  } catch (\NotchPay\NotchPay\Exception\ApiException $e) {
+    print_r($e->getResponseObject());
+    die($e->getMessage());
+  }
+} else {
+  try {
+    $tranx = $notchpay->payment->initialize([
+      'amount' => 4000,
+      "currency" => "XAF",
+      "callback" => "http://ecommerce.test/orders-update.php",
+      'email' => "chapdel.kamga2@gmail.com",         // unique to customers
+    ]);
+
+    header('Location: ' . $tranx->authorization_url);
+  } catch (\NotchPay\NotchPay\Exception\ApiException $e) {
+    die($e->getMessage());
+  }
 }
-
-
-
-
-?>

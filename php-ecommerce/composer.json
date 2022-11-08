@@ -1,5 +1,5 @@
 {
-    "require": {
-        "notchpay/php-sdk": "^2.0"
-    }
+  "require": {
+    "notchpay/php-sdk": "^2.1"
+  }
 }
